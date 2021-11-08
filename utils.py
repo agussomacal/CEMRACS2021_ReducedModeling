@@ -260,7 +260,7 @@ def state_estimation_pipeline(solutions_offline: List[np.ndarray],
         sm = SolutionsManager(lagrange_polynomials_degree=get_poly_degree_from_vspace_dim(np.shape(reduced_basis)[1]))
         measurements_reduced_basis = sm.evaluate_solutions(measurement_points, solutions=reduced_basis)
 
-        coefficients = np.linalg.lstsq(measurements_reduced_basis.T, measurements_online.T)[0]
+        coefficients = np.linalg.lstsq(measurements_reduced_basis.T, measurements_online.T, rcond=None)[0]
         approximate_solutions.append(coefficients.T @ np.array(reduced_basis))
 
     return approximate_solutions
