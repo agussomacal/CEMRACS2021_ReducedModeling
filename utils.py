@@ -45,15 +45,17 @@ def plot_solutions_together(sm, diffusion_coefficients, solutions, num_points_pe
 
 
 def plot_approximate_solutions_together(sm, diffusion_coefficients, solutions, approximate_solutions,
-                                        num_points_per_dim_to_plot=100, contour_levels=0, measurement_points=None):
+                                        num_points_per_dim_to_plot=100, contour_levels=0, measurement_points=None,
+                                        suptitle=False):
     x, y = np.meshgrid(*[np.linspace(0, 1, num=num_points_per_dim_to_plot)] * 2)
     for i, (a, u_aprox, u_true) in enumerate(zip(diffusion_coefficients, approximate_solutions, solutions)):
         ua = sm.evaluate_solutions(np.concatenate((x.reshape((-1, 1)), y.reshape((-1, 1))), axis=1),
                                    solutions=[u_aprox])
         ut = sm.evaluate_solutions(np.concatenate((x.reshape((-1, 1)), y.reshape((-1, 1))), axis=1), solutions=[u_true])
 
-        fig, ax = plt.subplots(ncols=2)
-        fig.suptitle("State estimation of \n a={}".format(np.round(np.reshape(a, (2, 2)), decimals=2)))
+        fig, ax = plt.subplots(ncols=2, figsize=(8, 4))
+        if suptitle:
+            fig.suptitle("State estimation of \n a={}".format(np.round(np.reshape(a, (2, 2)), decimals=2)))
 
         vmin = np.min((np.min(ua), np.min(ut)))
         vmax = np.max((np.max(ua), np.max(ut)))
@@ -73,6 +75,7 @@ def plot_approximate_solutions_together(sm, diffusion_coefficients, solutions, a
         #     for j in range(np.shape(a)[1]):
         #         ax[2].text(j, i, a[i, j], ha="center", va="center", color="w")
         # ax[2].set_title("Diffusion coefficients")
+
 
 # def plot_error():
 #     for i, (ax, a, u_aprox, u_true) in enumerate(
@@ -302,4 +305,3 @@ if __name__ == "__main__":
 
     x, y = np.meshgrid(*[np.linspace(0, 1, num=5)] * 2)
     u = sm.evaluate_solutions(np.concatenate((x.reshape((-1, 1)), y.reshape((-1, 1))), axis=1), solutions=solutions)
-
